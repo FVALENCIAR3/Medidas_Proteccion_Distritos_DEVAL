@@ -1,3 +1,6 @@
+# Instalar librería para quitar tildes fácilmente y manejar excel
+!pip install unidecode xlsxwriter -q
+
 import pandas as pd
 import io
 from google.colab import files
@@ -33,6 +36,16 @@ def asignar_distrito(texto):
     return 'SIN CLASIFICAR'
 
 # 2. Cargar el archivo
+# Para Streamlit, necesitarás un componente para subir archivos, como st.file_uploader
+# Por ejemplo:
+# uploaded_file = st.file_uploader("Sube tu archivo Excel (.xlsx, .xls) o CSV (.csv)", type=["xlsx", "xls", "csv"])
+# if uploaded_file is not None:
+#     nombre_archivo = uploaded_file.name
+#     if nombre_archivo.endswith('.csv'):
+#         df = pd.read_csv(uploaded_file, encoding='utf-8', sep=';')
+#     else:
+#         df = pd.read_excel(uploaded_file)
+
 print("Por favor, sube tu archivo Excel (.xlsx, .xls) o CSV (.csv)")
 uploaded = files.upload()
 nombre_archivo = list(uploaded.keys())[0]
@@ -167,6 +180,15 @@ with pd.ExcelWriter(nombre_salida, engine='xlsxwriter') as writer:
     df_sin_clasificar = df[df['DISTRITO_ASIGNADO'] == 'SIN CLASIFICAR']
     if not df_sin_clasificar.empty:
         df_sin_clasificar.to_excel(writer, sheet_name='Sin_Clasificar', index=False)
+
+# En un entorno Streamlit, puedes ofrecer el archivo para descargar así:
+# with open(nombre_salida, "rb") as f:
+#     st.download_button(
+#         label="Descargar Excel Clasificado",
+#         data=f,
+#         file_name=nombre_salida,
+#         mime="application/vnd.openxmlformats-officedocument.spreadsheetml.sheet"
+#     )
 
 print("\n✅ Proceso terminado con éxito. Descargando archivo...")
 files.download(nombre_salida)
