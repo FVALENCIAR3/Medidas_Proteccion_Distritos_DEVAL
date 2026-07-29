@@ -1,5 +1,4 @@
 # Instalar librería para quitar tildes fácilmente y manejar excel
-!pip install unidecode xlsxwriter -q
 
 import pandas as pd
 import io
